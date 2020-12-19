@@ -13,53 +13,53 @@ for elem in tree.getiterator():
 objectify.deannotate(tree, cleanup_namespaces=True)
 
 
-for obj in tree.getroot():
+for obj_pro in tree.getroot():
 
     # this is used to get the process names for below...
     
     # get the collaborations
-    if (obj.tag =='collaboration'):
-        for parti in obj:
+    if (obj_pro.tag =='collaboration'):
+        for parti in obj_pro:
             print('\t{} : {} | '.format(parti.get('name'),parti.get('id')))
 
 # TODO : switch pro anc object naming -> its the wrong way round!!!
 
-for obj in tree.getroot():
+for obj_pro in tree.getroot():
     # get the processes
-    if (obj.tag=='process'):
+    if (obj_pro.tag=='process'):
         
         # need to get the name by matching the participant id above......
         
-        print('############## NEW PROCESS : {} ###################### '.format(obj.get('name')))
-        print (obj.tag)
-        for pro in obj:
-            dash = '\t --------'+('-'*len(pro.tag))
+        print('############## NEW PROCESS : {} ###################### '.format(obj_pro.get('name')))
+        print (obj_pro.tag)
+        for obj in obj_pro:
+            dash = '\t --------'+('-'*len(obj.tag))
             print(dash)
-            print('\t| [PRO] {} |'.format(pro.tag))
+            print('\t| [PRO] {} |'.format(obj.tag))
             print(dash)
             
-            if (pro.tag =='startEvent'):
+            if (obj.tag =='startEvent'):
                 # the id of the outgoing connection / sequenceFlow(i think)
-                print(pro.get('outgoing'))
+                print(obj.get('outgoing'))
                 
-            elif (pro.tag =='task'):
+            elif (obj.tag =='task'):
                 # the id of the task
-                print('id: {}'.format(pro.get('id')))
+                print('id: {}'.format(obj.get('id')))
                 # the name of the task
-                print('name: {}'.format(pro.get('name')))
-                for flow in pro:
+                print('name: {}'.format(obj.get('name')))
+                for flow in obj:
                     if (flow.tag=='incoming'):
                         print('{} : {}'.format(flow.tag,flow.text) )
                     elif (flow.tag=='outgoing'):
                         print('{} : {}'.format(flow.tag,flow.text) )
                 
-            elif (pro.tag =='task'):
+            elif (obj.tag =='task'):
                 # the id of the task
-                print(pro.get('id'))
+                print(obj.get('id'))
                 # the name of the task
-                print(pro.get('name'))
+                print(obj.get('name'))
                 
-        print('############## END PROCESS : {} ###################### \n'.format(obj.get('name')))        
+        print('############## END PROCESS : {} ###################### \n'.format(obj_pro.get('name')))        
 
 
        
