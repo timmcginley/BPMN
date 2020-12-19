@@ -6,32 +6,39 @@
     <bpmn:participant id="Participant_14jkwpi" name="REF INFO" processRef="Process_0akiuq7" />
   </bpmn:collaboration>
   <bpmn:process id="Process_06sc2ag" isExecutable="false">
+  
     <bpmn:startEvent id="StartEvent_1qjmuh5">
       <bpmn:outgoing>Flow_1lnk8rf</bpmn:outgoing>
     </bpmn:startEvent>
+	
     <bpmn:task id="Activity_1w1ur1n" name="Analyze Area Data">
       <bpmn:incoming>Flow_1lnk8rf</bpmn:incoming>
       <bpmn:incoming>Flow_0uml9xw</bpmn:incoming>
       <bpmn:outgoing>Flow_1fqj5zs</bpmn:outgoing>
     </bpmn:task>
+	
     <bpmn:task id="Activity_0lf3w97" name="Select a Building Site Location">
       <bpmn:incoming>Flow_1fqj5zs</bpmn:incoming>
       <bpmn:outgoing>Flow_1fe7880</bpmn:outgoing>
     </bpmn:task>
+	
     <bpmn:exclusiveGateway id="Gateway_1nnc0vk" name="Is Site Acceptable and Available?">
       <bpmn:incoming>Flow_1fe7880</bpmn:incoming>
       <bpmn:outgoing>Flow_0uml9xw</bpmn:outgoing>
       <bpmn:outgoing>Flow_085fj1v</bpmn:outgoing>
       <bpmn:outgoing>Flow_15ejcdj</bpmn:outgoing>
     </bpmn:exclusiveGateway>
+	
     <bpmn:task id="Activity_1vrsfme" name="Generate Site Analysis Model">
       <bpmn:incoming>Flow_15ejcdj</bpmn:incoming>
       <bpmn:outgoing>Flow_0fme2fr</bpmn:outgoing>
     </bpmn:task>
+	
     <bpmn:task id="Activity_13l1smo" name="Analyze Project Site">
       <bpmn:incoming>Flow_085fj1v</bpmn:incoming>
       <bpmn:outgoing>Flow_1dt9vs5</bpmn:outgoing>
     </bpmn:task>
+	
     <bpmn:task id="Activity_1af1x78" name="Deteremindfslmlgfndfn">
       <bpmn:incoming>Flow_1dt9vs5</bpmn:incoming>
       <bpmn:incoming>Flow_0fme2fr</bpmn:incoming>
@@ -39,6 +46,7 @@
         <bpmn:targetRef>DataObjectReference_1qycyk9</bpmn:targetRef>
       </bpmn:dataOutputAssociation>
     </bpmn:task>
+	
     <bpmn:sequenceFlow id="Flow_1lnk8rf" sourceRef="StartEvent_1qjmuh5" targetRef="Activity_1w1ur1n" />
     <bpmn:sequenceFlow id="Flow_1fqj5zs" sourceRef="Activity_1w1ur1n" targetRef="Activity_0lf3w97" />
     <bpmn:sequenceFlow id="Flow_1fe7880" sourceRef="Activity_0lf3w97" targetRef="Gateway_1nnc0vk" />
@@ -47,7 +55,9 @@
     <bpmn:sequenceFlow id="Flow_15ejcdj" name="Yes" sourceRef="Gateway_1nnc0vk" targetRef="Activity_1vrsfme" />
     <bpmn:sequenceFlow id="Flow_1dt9vs5" sourceRef="Activity_13l1smo" targetRef="Activity_1af1x78" />
     <bpmn:sequenceFlow id="Flow_0fme2fr" sourceRef="Activity_1vrsfme" targetRef="Activity_1af1x78" />
+  
   </bpmn:process>
+  
   <bpmn:process id="Process_0ayc1cp">
     <bpmn:dataObjectReference id="DataObjectReference_1qycyk9" name="sITE aNALYSI Model" dataObjectRef="DataObject_0sd2x1a" />
     <bpmn:dataObject id="DataObject_0sd2x1a" />
