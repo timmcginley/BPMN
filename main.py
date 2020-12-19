@@ -1,9 +1,12 @@
 from lxml import etree, objectify
 from io import StringIO
 
-tree = etree.parse("process/diagram.bpmn")
+#tree = etree.parse("process/diagram.bpmn")
+tree = etree.parse("process/example.bpmn")
+#tree = etree.parse("process/19650.bpmn")
 #tree = etree.parse("process/hellowall.bpmn")
 
+print('')
  
 for elem in tree.getiterator():
     if not hasattr(elem.tag, 'find'): continue  # (1)
@@ -12,54 +15,75 @@ for elem in tree.getiterator():
         elem.tag = elem.tag[i+1:]
 objectify.deannotate(tree, cleanup_namespaces=True)
 
+# this loop tries to work out the context of the BPMN
+# do we have no collaboration or swimlanes - (hellowall.bpmn)
+# do we have many participants in a single collaboration
+# or do we have different lanes in the same collaboration....(19650.bpmn)
 
-for obj_pro in tree.getroot():
+collab = False
+
+for process in tree.getroot():
 
     # this is used to get the process names for below...
     
     # get the collaborations
-    if (obj_pro.tag =='collaboration'):
-        for parti in obj_pro:
-            print('\t{} : {} | '.format(parti.get('name'),parti.get('id')))
+    if (process.tag =='collaboration'):
+        collab = True
+        # ok so we could have multiple collaborations
+        # multiple lane sets
+       
+        
+        for lane in process:
+            print('\t{} : {} | '.format(lane.get('name'),lane.get('id')))
 
-# TODO : switch pro anc object naming -> its the wrong way round!!!
+print('\tModel has collaboration : {}\n'.format(collab))
 
-for obj_pro in tree.getroot():
+for element in tree.getroot():
     # get the processes
-    if (obj_pro.tag=='process'):
+    if (element.tag=='process'):
         
         # need to get the name by matching the participant id above......
         
-        print('############## NEW PROCESS : {} ###################### '.format(obj_pro.get('name')))
-        print (obj_pro.tag)
-        for obj in obj_pro:
-            dash = '\t --------'+('-'*len(obj.tag))
+        print('############## NEW PROCESS : {} ###################### \n'.format(element.get('name')))
+
+        for obj in element:
+            dash = '\t --'+('-'*len(obj.tag))
             print(dash)
-            print('\t| [PRO] {} |'.format(obj.tag))
+            print('\t| {} |'.format(obj.tag))
             print(dash)
             
             if (obj.tag =='startEvent'):
                 # the id of the outgoing connection / sequenceFlow(i think)
-                print(obj.get('outgoing'))
+                for flow in obj:
+                    if (flow.tag=='outgoing'):
+                        print('\t\t{} : {}'.format(flow.tag,flow.text) )
                 
-            elif (obj.tag =='task'):
+            elif (obj.tag =='task' or obj.tag =='exclusiveGateway'):
                 # the id of the task
-                print('id: {}'.format(obj.get('id')))
+                print('\t\tid: {}'.format(obj.get('id')))
                 # the name of the task
-                print('name: {}'.format(obj.get('name')))
+                print('\t\tname: {}'.format(obj.get('name')))
                 for flow in obj:
                     if (flow.tag=='incoming'):
-                        print('{} : {}'.format(flow.tag,flow.text) )
+                        print('\t\t{} : {}'.format(flow.tag,flow.text) )
                     elif (flow.tag=='outgoing'):
-                        print('{} : {}'.format(flow.tag,flow.text) )
-                
-            elif (obj.tag =='task'):
+                        print('\t\t{} : {}'.format(flow.tag,flow.text) )
+            
+            elif (obj.tag =='sequenceFlow'):
                 # the id of the task
-                print(obj.get('id'))
-                # the name of the task
-                print(obj.get('name'))
+                print('\t\tid: {}'.format(obj.get('id')))
+                # if of the sourceRef
+                print('\t\tsourceRef: {}'.format(obj.get('sourceRef')))
+                # if of the targetRef
+                print('\t\ttargetRef: {}'.format(obj.get('targetRef')))
                 
-        print('############## END PROCESS : {} ###################### \n'.format(obj_pro.get('name')))        
+            # elif (obj.tag =='task'):
+                # # the id of the task
+                # print(obj.get('id'))
+                # # the name of the task
+                # print(obj.get('name'))
+                
+        print('\n############## END PROCESS : {} ###################### \n'.format(element.get('name')))        
 
 
        
