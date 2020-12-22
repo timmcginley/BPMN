@@ -2,8 +2,9 @@ from lxml import etree, objectify
 from io import StringIO
 
 #tree = etree.parse("process/diagram.bpmn")
-tree = etree.parse("process/example.bpmn")
+#tree = etree.parse("process/example.bpmn")
 #tree = etree.parse("process/19650.bpmn")
+tree = etree.parse("process/19650_v2.bpmn")
 #tree = etree.parse("process/hellowall.bpmn")
 
 print('')
@@ -18,7 +19,6 @@ objectify.deannotate(tree, cleanup_namespaces=True)
 # this loop tries to work out the context of the BPMN
 # do we have no collaboration or swimlanes - (hellowall.bpmn)
 # do we have many participants in a single collaboration
-# or do we have different lanes in the same collaboration....(19650.bpmn)
 
 collab = False
 
@@ -68,6 +68,22 @@ for element in tree.getroot():
                         print('\t\t{} : {}'.format(flow.tag,flow.text) )
                     elif (flow.tag=='outgoing'):
                         print('\t\t{} : {}'.format(flow.tag,flow.text) )
+                        
+            elif (obj.tag =='scriptTask'):
+                # the id of the task
+                print('\t\tid: {}'.format(obj.get('id')))
+                # if of the sourceRef
+                print('\t\tname: {}'.format(obj.get('name')))
+                # if of the targetRef
+                print('\t\tscriptFormat: {}'.format(obj.get('scriptFormat')))
+                for flow in obj:
+                    if (flow.tag=='incoming'):
+                        print('\t\t{} : {}'.format(flow.tag,flow.text) )
+                    elif (flow.tag=='outgoing'):
+                        print('\t\t{} : {}'.format(flow.tag,flow.text) )   
+                    # ####### CARFUL WITH HOW YOU HANDLE THIS ELEMENT #############    
+                    elif (flow.tag=='script'):
+                        print('\t\t{} : {}'.format(flow.tag,flow.text) )
             
             elif (obj.tag =='sequenceFlow'):
                 # the id of the task
@@ -77,6 +93,17 @@ for element in tree.getroot():
                 # if of the targetRef
                 print('\t\ttargetRef: {}'.format(obj.get('targetRef')))
                 
+            elif (obj.tag =='association'):
+                # the id of the task
+                print('\t\tid: {}'.format(obj.get('id')))
+                
+                print('\t\tassociationDirection: {}'.format(obj.get('associationDirection')))
+                # if of the sourceRef
+                print('\t\tsourceRef: {}'.format(obj.get('sourceRef')))
+                # if of the targetRef
+                print('\t\ttargetRef: {}'.format(obj.get('targetRef')))
+            
+            
             # elif (obj.tag =='task'):
                 # # the id of the task
                 # print(obj.get('id'))
