@@ -20,13 +20,16 @@
       <bpmn:outgoing>Flow_0wszk05</bpmn:outgoing>
       <bpmn:outgoing>Flow_1ifhscg</bpmn:outgoing>
     </bpmn:exclusiveGateway>
+	
     <bpmn:scriptTask id="Activity_1bdsz1f" name="do washing" scriptFormat="groovy">
       <bpmn:incoming>Flow_0wszk05</bpmn:incoming>
       <bpmn:script>sum = 0
 			for ( i in inputArray ) {
 			  sum += i
-			}</bpmn:script>
+			}
+			</bpmn:script>
     </bpmn:scriptTask>
+	
     <bpmn:task id="Activity_0pwkzk1" name="do rubbish">
       <bpmn:incoming>Flow_1ifhscg</bpmn:incoming>
     </bpmn:task>
